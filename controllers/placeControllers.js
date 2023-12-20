@@ -82,11 +82,12 @@ router.get('/mine', (req, res) => {
 // Will display a single instance of a user's saved places
 router.get('/mine/:id', (req, res) => {
     const { username, loggedIn, userId } = req.session
+    const myPlaceId = req.params.id;
     // find a specific place using the id
-    Place.findById(req.params.id)
+    Place.findById(myPlaceId)
         // display a user-specific show pages
         .then(thePlace => {
-            res.send(thePlace)
+            res.render('places/myShow', { place: thePlace, username, loggedIn, userId })
         })
         // send an error page if something goes wrong
         .catch(err => {

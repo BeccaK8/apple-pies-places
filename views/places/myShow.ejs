@@ -1,0 +1,30 @@
+<%- include('../partials/header') %>
+
+<div class="container center mt-3 text-center">
+    <h2>My Place: <%= place.name %></h2>
+    <hr>
+    <div class="row">
+        <div class="col-sm-4">Visited? <%= place.visited ? 'Y' : 'N' %></div>
+        <div class="col-sm-4">Wish List? <%= place.wishList ? 'Y' : 'N' %></div>
+        <div class="col-sm-4">Favorite? <%= place.favorite ? 'Y' : 'N' %></div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-sm-12">
+            <img src="<%= place.flag %>" alt="country flag">
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-sm-6">Region: <%= place.region %></div>
+        <div class="col-sm-6">Sub Region: <%= place.subRegion %></div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-sm-6">Latitude: <%= place.lat %></div>
+        <div class="col-sm-6">Longitude: <%= place.long %></div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-sm-12"><a href="<%= place.mapLink%>" target="_blank">See in Google Maps</a></div>
+    </div>
+</div>
+
+
+<%- include('../partials/footer') %>
