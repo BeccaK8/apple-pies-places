@@ -96,6 +96,52 @@ router.get('/mine/:id', (req, res) => {
         })
 })
 
+// UPDATE -> /places/update/:id
+router.put('/update/:id', (req, res) => {
+    const { username, loggedIn, userId } = req.session
+    // target specific place
+    const placeId = req.params.id;
+    const theUpdatedPlace = req.body;
+
+    // sometimes mean hackers try to steal stuff
+    // remove the ownership from req.body (even if it is not sent)
+    // the reassign using the session info
+    delete theUpdatedPlace.owner;
+    theUpdatedPlace.owner = userId;
+
+    theUpdatedPlace.visited = !!theUpdatedPlace.visited
+    theUpdatedPlace.wishlist = !!theUpdatedPlace.wishlist
+    theUpdatedPlace.favorite = !!theUpdatedPlace.favorite
+    console.log('this is the req body: ', theUpdatedPlace);
+
+    // find the place
+    Place.findById(placeId)
+    // check for authorization (i.e., owner)
+    // if they are the owenr, allow update and refresh the page
+        .then(foundPlace => {
+            // determine if logged in user is authorized to delete this (aka the owner)
+            // use double equal as the type may be different (ObjectId vs String)
+            if (foundPlace.owner == userId) {
+                // now we can update
+                // this is document method so lower case place
+                return foundPlace.updateOne(theUpdatedPlace);
+            } else {
+                // not the owner so redirect to error page
+                res.redirect(`/error?error=You%20Not%20Allowed%20to%20Update%20this%20Place`);
+            }
+        })
+        // redirect to another page
+        .then(returnedPlace => {
+            res.redirect(`/places/mine/${placeId}`);
+        })
+        // if not, send error
+        // handle any errors that may come up
+        .catch(err => {
+            console.log('error')
+            res.redirect(`/error?error=${err}`)
+        })
+});
+
 // DELETE -> /places/delete/:id
 // Remove places from a user's list
 // only available to the authorized user
@@ -105,7 +151,6 @@ router.delete('/delete/:id', (req, res) => {
     const placeId = req.params.id;
     // find it in the database
     Place.findById(placeId)
-        // delete it    
         .then(place => {
             // determine if logged in user is authorized to delete this (aka the owner)
             // use double equal as the type may be different (ObjectId vs String)
@@ -117,11 +162,11 @@ router.delete('/delete/:id', (req, res) => {
                 // not the owner so redirect to error page
                 res.redirect(`/error?error=You%20Not%20Allowed%20to%20Delete%20this%20Place`);
             }
-            // redirect to another page
-
         })
+        // delete it    
         .then(deletedPlace => {
             console.log('this was returned from deleteOne: \n', deletedPlace);
+            // redirect to another page
             res.redirect('/places/mine');
         })
         // handle any errors that may come up
