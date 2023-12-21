@@ -27,7 +27,12 @@
             </tr>
         </tbody>
     </table>
-    <a href="/places/all" class="btn btn-warning me-3">Back to All Countries</a>
+    <div class="btn-group">
+        <a href="/places/all" class="btn btn-warning me-3">Back to All Countries</a>
+        <form action="/places/delete/<%= place.id %>?_method=DELETE" method="post">
+            <input type="submit" class="btn btn-danger" value="Delete this Place">
+        </form>
+    </div>
 </div>
 
 <%- include('../partials/footer') %>

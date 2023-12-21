@@ -96,8 +96,44 @@ router.get('/mine/:id', (req, res) => {
         })
 })
 
+// DELETE -> /places/delete/:id
+// Remove places from a user's list
+// only available to the authorized user
+router.delete('/delete/:id', (req, res) => {
+    const { username, loggedIn, userId } = req.session
+    // target specific place
+    const placeId = req.params.id;
+    // find it in the database
+    Place.findById(placeId)
+        // delete it    
+        .then(place => {
+            // determine if logged in user is authorized to delete this (aka the owner)
+            // use double equal as the type may be different (ObjectId vs String)
+            if (place.owner == userId) {
+                // now we can delete
+                // this is document method so lower case place
+                return place.deleteOne();
+            } else {
+                // not the owner so redirect to error page
+                res.redirect(`/error?error=You%20Not%20Allowed%20to%20Delete%20this%20Place`);
+            }
+            // redirect to another page
+
+        })
+        .then(deletedPlace => {
+            console.log('this was returned from deleteOne: \n', deletedPlace);
+            res.redirect('/places/mine');
+        })
+        // handle any errors that may come up
+        .catch(err => {
+            console.log('error')
+            res.redirect(`/error?error=${err}`)
+        })
+});
+
 // GET -> /places/:name
 // give us a specific country's details after searching with the name
+// goes under all more specific routes
 router.get('/:name', (req, res) => {
     const { username, loggedIn, userId } = req.session
     const placeName = req.params.name
