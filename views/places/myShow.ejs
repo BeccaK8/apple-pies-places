@@ -1,30 +1,33 @@
+
 <%- include('../partials/header') %>
 
-<div class="container center mt-3 text-center">
-    <h2>My Place: <%= place.name %></h2>
-    <hr>
-    <div class="row">
-        <div class="col-sm-4">Visited? <%= place.visited ? 'Y' : 'N' %></div>
-        <div class="col-sm-4">Wish List? <%= place.wishList ? 'Y' : 'N' %></div>
-        <div class="col-sm-4">Favorite? <%= place.favorite ? 'Y' : 'N' %></div>
-    </div>
-    <div class="row mt-3">
-        <div class="col-sm-12">
-            <img src="<%= place.flag %>" alt="country flag">
-        </div>
-    </div>
-    <div class="row mt-3">
-        <div class="col-sm-6">Region: <%= place.region %></div>
-        <div class="col-sm-6">Sub Region: <%= place.subRegion %></div>
-    </div>
-    <div class="row mt-3">
-        <div class="col-sm-6">Latitude: <%= place.lat %></div>
-        <div class="col-sm-6">Longitude: <%= place.long %></div>
-    </div>
-    <div class="row mt-3">
-        <div class="col-sm-12"><a href="<%= place.mapLink%>" target="_blank">See in Google Maps</a></div>
-    </div>
-</div>
 
+<div class="container center text-center">
+    <h2 class="mt-3"><%= place.name %></h2>
+    <img src="<%=place.flag%>" alt="flag" class="container center mt-3">
+    <table class="table table-striped mt-3">
+        <thead>
+            <tr>
+                <th scope="col">Region</th>
+                <th scope="col">Sub Region</th>
+                <th scope="col">Map Link</th>
+                <th scope="col">Latitude</th>
+                <th scope="col">Longitude</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td scope="row"><%= place.region %></td>
+                <td scope="row"><%= place.subRegion %></td>
+                <td scope="row"><a href="<%= place.mapLink %>" target="_blank">Map Link</a></td>
+                <!-- <td scope="row"><a href="<img src="<%= place.mapLink %>"" alt="Maps"></td> -->
+                <td scope="row"><%= place.lat %></td>
+                <td scope="row"><%= place.long %></td>
+
+            </tr>
+        </tbody>
+    </table>
+    <a href="/places/all" class="btn btn-warning me-3">Back to All Countries</a>
+</div>
 
 <%- include('../partials/footer') %>
